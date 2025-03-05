@@ -1,51 +1,38 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
-namespace Tetris;
-
-public class Game1 : Game
+namespace Tetris
 {
-    private GraphicsDeviceManager _graphics;
-    private SpriteBatch _spriteBatch;
-
-    public Game1()
+    public class Game1 : Game
     {
-        _graphics = new GraphicsDeviceManager(this);
-        Content.RootDirectory = "Content";
-        IsMouseVisible = true;
-    }
+        GraphicsDeviceManager graphics;
+        SpriteBatch spriteBatch;
 
-    protected override void Initialize()
-    {
-        // TODO: Add your initialization logic here
+        Texture2D block;
+        int blockSize = 20;
 
-        base.Initialize();
-    }
+        public Game1()
+        {
+            graphics = new GraphicsDeviceManager(this);
+        }
 
-    protected override void LoadContent()
-    {
-        _spriteBatch = new SpriteBatch(GraphicsDevice);
+        protected override void LoadContent()
+        {
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            block = new Texture2D(GraphicsDevice, blockSize, blockSize);
 
-        // TODO: use this.Content to load your game content here
-    }
+            Color[] data = new Color[blockSize * blockSize];
+            for (int i = 0; i < data.Length; i++)
+                data[i] = Color.White;
+            block.SetData(data);
+        }
 
-    protected override void Update(GameTime gameTime)
-    {
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-            Exit();
-
-        // TODO: Add your update logic here
-
-        base.Update(gameTime);
-    }
-
-    protected override void Draw(GameTime gameTime)
-    {
-        GraphicsDevice.Clear(Color.CornflowerBlue);
-
-        // TODO: Add your drawing code here
-
-        base.Draw(gameTime);
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.Black);
+            spriteBatch.Begin();
+            spriteBatch.Draw(block, new Vector2(100, 0), Color.White);
+            spriteBatch.End();
+        }
     }
 }
