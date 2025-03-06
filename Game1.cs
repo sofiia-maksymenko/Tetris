@@ -41,6 +41,7 @@ namespace Tetris
 
         protected override void Update(GameTime gameTime)
         {
+                y += 2;
             base.Update(gameTime);
         }
 
