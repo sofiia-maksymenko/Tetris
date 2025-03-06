@@ -8,8 +8,10 @@ namespace Tetris
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        Texture2D block;
-        int blockSize = 20;
+        Texture2D block; 
+        int blockSize = 20; 
+        int blockWidth = 2; 
+        int blockHeight = 2; 
 
         int y = 0;
         int ground;
@@ -17,14 +19,14 @@ namespace Tetris
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            
         }
 
         protected override void Initialize()
         {
-            ground = graphics.PreferredBackBufferHeight - blockSize;
+            ground = graphics.PreferredBackBufferHeight - blockSize * blockHeight;
             base.Initialize();
         }
-
 
         protected override void LoadContent()
         {
@@ -39,9 +41,6 @@ namespace Tetris
 
         protected override void Update(GameTime gameTime)
         {
-            if (y < ground)
-                y += 2;
-
             base.Update(gameTime);
         }
 
@@ -49,7 +48,15 @@ namespace Tetris
         {
             GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
-            spriteBatch.Draw(block, new Vector2(100, 0), Color.White);
+
+            for (int i = 0; i < blockWidth; i++)
+            {
+                for (int j = 0; j < blockHeight; j++)
+                {
+                    spriteBatch.Draw(block, new Vector2(100 + i * blockSize, y + j * blockSize), Color.White);
+                }
+            }
+
             spriteBatch.End();
         }
     }
