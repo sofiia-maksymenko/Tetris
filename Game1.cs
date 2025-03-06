@@ -41,6 +41,7 @@ namespace Tetris
 
         protected override void Update(GameTime gameTime)
         {
+            if (y < ground)
                 y += 2;
             base.Update(gameTime);
         }
