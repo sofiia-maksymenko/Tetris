@@ -5,35 +5,39 @@ namespace Tetris
 {
     public class Game1 : Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        private const int FieldWidth = 10;
+        private const int FieldHeight = 20;
+        private const int BlockSize = 20;
+        
+        // TODO: calculate draw offset based on screen size so that the field is centered.
+        private Vector2 FieldDrawOffset = new Vector2(0, 0);
+        
+        private const int blockWidth = 2; 
+        private const int blockHeight = 2; 
 
-        Texture2D block; 
-        int blockSize = 20; 
-        int blockWidth = 2; 
-        int blockHeight = 2; 
+        private GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
 
-        int y = 0;
-        int ground;
+        private Texture2D block;
+
+        private Point _blockPosition = new Point(0, 0);
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            
         }
 
         protected override void Initialize()
         {
-            ground = graphics.PreferredBackBufferHeight - blockSize * blockHeight;
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            block = new Texture2D(GraphicsDevice, blockSize, blockSize);
+            block = new Texture2D(GraphicsDevice, BlockSize, BlockSize);
 
-            Color[] data = new Color[blockSize * blockSize];
+            Color[] data = new Color[BlockSize * BlockSize];
             for (int i = 0; i < data.Length; i++)
                 data[i] = Color.White;
             block.SetData(data);
@@ -41,8 +45,13 @@ namespace Tetris
 
         protected override void Update(GameTime gameTime)
         {
-            if (y < ground)
-                y += 2;
+            //TODO: uncomment and test what happens. how do we improve this?
+            //_blockPosition.Y += 1;
+
+            if (_blockPosition.Y == FieldHeight - 1)
+            {
+                
+            }
             base.Update(gameTime);
         }
 
@@ -51,15 +60,26 @@ namespace Tetris
             GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
 
-            for (int i = 0; i < blockWidth; i++)
+            for (int x = 0; x < blockWidth; x++)
             {
-                for (int j = 0; j < blockHeight; j++)
+                for (int y = 0; y < blockHeight; y++)
                 {
-                    spriteBatch.Draw(block, new Vector2(100 + i * blockSize, y + j * blockSize), Color.White);
+                    spriteBatch.Draw(
+                        block, 
+                        FieldToWorldPosition(_blockPosition + new Point(x, y)), 
+                        Color.White);
                 }
             }
 
             spriteBatch.End();
+        }
+
+        private Vector2 FieldToWorldPosition(Point blockPosition)
+        {
+            //TODO Sofiia: Implement proper function from constants, to calculate a world
+            // position to render a rectangle on the screen in the right position using the
+            // first four constants in the class.
+            return new Vector2();
         }
     }
 }
