@@ -79,7 +79,11 @@ namespace Tetris
             //TODO Sofiia: Implement proper function from constants, to calculate a world
             // position to render a rectangle on the screen in the right position using the
             // first four constants in the class.
-            return new Vector2();
+            return new Vector2(
+                FieldDrawOffset.X + blockPosition.X * BlockSize,
+                FieldDrawOffset.Y + blockPosition.Y * BlockSize
+
+            );
         }
     }
 }
