@@ -25,7 +25,8 @@ namespace Tetris
 
         private Point _blockPosition = new Point(0, 0);
 
-        
+        private double fallTimer = 0;
+        private const double fallInterval = 0.5;
 
 
         public Game1()
@@ -64,13 +65,19 @@ namespace Tetris
         protected override void Update(GameTime gameTime)
         {
             //TODO: uncomment and test what happens. how do we improve this?
-            _blockPosition.Y += 1;
-           
-            
-            if (_blockPosition.Y == FieldHeight - 1)
-            {
 
+            fallTimer += gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (fallTimer >= fallInterval)
+            {
+                fallTimer = 0;
+
+                if (_blockPosition.Y < FieldHeight - 1)
+                {
+                    _blockPosition.Y += 1;
+                }
             }
+
 
             base.Update(gameTime);
         }
