@@ -8,12 +8,15 @@ namespace Tetris
         private const int FieldWidth = 10;
         private const int FieldHeight = 20;
         private const int BlockSize = 20;
-        
+
         // TODO: calculate draw offset based on screen size so that the field is centered.
-        private Vector2 FieldDrawOffset = new Vector2(0, 0);
-        
-        private const int blockWidth = 2; 
-        private const int blockHeight = 2; 
+
+        //private Vector2 FieldDrawOffset = new Vector2(0, 0);
+
+        private Vector2 FieldDrawOffset;
+
+        private const int blockWidth = 2;
+        private const int blockHeight = 2;
 
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
@@ -21,6 +24,9 @@ namespace Tetris
         private Texture2D block;
 
         private Point _blockPosition = new Point(0, 0);
+
+        
+
 
         public Game1()
         {
@@ -30,6 +36,7 @@ namespace Tetris
         protected override void Initialize()
         {
             base.Initialize();
+
         }
 
         protected override void LoadContent()
@@ -41,17 +48,30 @@ namespace Tetris
             for (int i = 0; i < data.Length; i++)
                 data[i] = Color.White;
             block.SetData(data);
+
+
+            int screenWidth = GraphicsDevice.Viewport.Width;
+            int screenHeight = GraphicsDevice.Viewport.Height;
+
+            FieldDrawOffset = new Vector2(
+                (screenWidth - FieldWidth * BlockSize) / 2,
+                (screenHeight - FieldHeight * BlockSize) / 2
+
+            );
         }
 
+        
         protected override void Update(GameTime gameTime)
         {
             //TODO: uncomment and test what happens. how do we improve this?
-            //_blockPosition.Y += 1;
-
+            _blockPosition.Y += 1;
+           
+            
             if (_blockPosition.Y == FieldHeight - 1)
             {
-                
+
             }
+
             base.Update(gameTime);
         }
 
@@ -65,8 +85,8 @@ namespace Tetris
                 for (int y = 0; y < blockHeight; y++)
                 {
                     spriteBatch.Draw(
-                        block, 
-                        FieldToWorldPosition(_blockPosition + new Point(x, y)), 
+                        block,
+                        FieldToWorldPosition(_blockPosition + new Point(x, y)),
                         Color.White);
                 }
             }
@@ -80,6 +100,7 @@ namespace Tetris
             // position to render a rectangle on the screen in the right position using the
             // first four constants in the class.
             return new Vector2(
+
                 FieldDrawOffset.X + blockPosition.X * BlockSize,
                 FieldDrawOffset.Y + blockPosition.Y * BlockSize
 
