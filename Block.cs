@@ -6,13 +6,15 @@ namespace Tetris;
 public class Block
 {
     private Texture2D _block;
-    
+    private BlockPositionConverter _positionConverter;
+
     public Point Position { get; set; }
 
-    public Block(Point startPosition, GraphicsDevice graphicsDevice)
+    public Block(Point startPosition, GraphicsDevice graphicsDevice, BlockPositionConverter positionConverter)
     {
         Position = startPosition;
-        
+        _positionConverter = positionConverter;
+
         _block = new Texture2D(
             graphicsDevice, 
             Constants.BlockSize, 
@@ -33,7 +35,7 @@ public class Block
     {
         spriteBatch.Draw(
             _block,
-            game.FieldToWorldPosition(Position),
+            _positionConverter.ToScreenPosition(Position),
             Color.White);
     }
 }

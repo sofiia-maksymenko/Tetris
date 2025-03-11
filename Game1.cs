@@ -5,10 +5,9 @@ namespace Tetris
 {
     public class Game1 : Game
     {
-        private const int FieldWidth = 10;
-        private const int FieldHeight = 20;
         
-        private Vector2 FieldDrawOffset;
+        private BlockPositionConverter _positionConverter;
+
 
         private const int blockWidth = 2;
         private const int blockHeight = 2;
@@ -28,22 +27,18 @@ namespace Tetris
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            _blocks = new[]
-            {
-                new Block(new Point(0, 0), GraphicsDevice),
-                new Block(new Point(1, 0), GraphicsDevice),
-                new Block(new Point(0, 1), GraphicsDevice),
-                new Block(new Point(1, 1), GraphicsDevice)
-            };
-
             int screenWidth = GraphicsDevice.Viewport.Width;
             int screenHeight = GraphicsDevice.Viewport.Height;
 
-            FieldDrawOffset = new Vector2(
-                (screenWidth - FieldWidth * Constants.BlockSize) / 2,
-                (screenHeight - FieldHeight * Constants.BlockSize) / 2
+            _positionConverter = new BlockPositionConverter(screenWidth, screenHeight);
 
-            );
+            _blocks = new[]
+            {
+                new Block(new Point(0, 0), GraphicsDevice,_positionConverter),
+                new Block(new Point(1, 0), GraphicsDevice, _positionConverter),
+                new Block(new Point(0, 1), GraphicsDevice, _positionConverter),
+                new Block(new Point(1, 1), GraphicsDevice, _positionConverter)
+            };
 
             _movementTimer = new MovementTimer(0.7f);
         }
@@ -57,7 +52,7 @@ namespace Tetris
                 var isOnGround = false;
                 foreach (var block in _blocks)
                 {
-                    if (block.Position.Y == FieldHeight - 1)
+                    if (block.Position.Y == Constants.FieldHeight - 1)
                     {
                         isOnGround = true;
                         break;
@@ -91,11 +86,7 @@ namespace Tetris
 
         public Vector2 FieldToWorldPosition(Point blockPosition)
         {
-            return new Vector2(
-
-                FieldDrawOffset.X + blockPosition.X * Constants.BlockSize,
-                FieldDrawOffset.Y + blockPosition.Y * Constants.BlockSize
-            );
+            return _positionConverter.ToScreenPosition(blockPosition);
         }
     }
 }
