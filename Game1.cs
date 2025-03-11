@@ -9,10 +9,6 @@ namespace Tetris
         private const int FieldHeight = 20;
         private const int BlockSize = 20;
 
-        // TODO: calculate draw offset based on screen size so that the field is centered.
-
-        //private Vector2 FieldDrawOffset = new Vector2(0, 0);
-
         private Vector2 FieldDrawOffset;
 
         private const int blockWidth = 2;
@@ -25,19 +21,11 @@ namespace Tetris
 
         private Point _blockPosition = new Point(0, 0);
 
-        private double fallTimer = 0;
-        private const double fallInterval = 0.5;
-
+        private MovementTimer _movementTimer;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-        }
-
-        protected override void Initialize()
-        {
-            base.Initialize();
-
         }
 
         protected override void LoadContent()
@@ -59,25 +47,21 @@ namespace Tetris
                 (screenHeight - FieldHeight * BlockSize) / 2
 
             );
+
+            _movementTimer = new MovementTimer(0.7f);
         }
 
-        
         protected override void Update(GameTime gameTime)
         {
-            //TODO: uncomment and test what happens. how do we improve this?
+            var elapsedTimeInSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            fallTimer += gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (fallTimer >= fallInterval)
+            if (_movementTimer.Update(elapsedTimeInSeconds))
             {
-                fallTimer = 0;
-
                 if (_blockPosition.Y < FieldHeight - 1)
                 {
                     _blockPosition.Y += 1;
                 }
             }
-
 
             base.Update(gameTime);
         }
@@ -103,14 +87,10 @@ namespace Tetris
 
         private Vector2 FieldToWorldPosition(Point blockPosition)
         {
-            //TODO Sofiia: Implement proper function from constants, to calculate a world
-            // position to render a rectangle on the screen in the right position using the
-            // first four constants in the class.
             return new Vector2(
 
                 FieldDrawOffset.X + blockPosition.X * BlockSize,
                 FieldDrawOffset.Y + blockPosition.Y * BlockSize
-
             );
         }
     }
