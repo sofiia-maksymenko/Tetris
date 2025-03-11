@@ -7,8 +7,7 @@ namespace Tetris
     {
         private const int FieldWidth = 10;
         private const int FieldHeight = 20;
-        private const int BlockSize = 20;
-
+        
         private Vector2 FieldDrawOffset;
 
         private const int blockWidth = 2;
@@ -17,11 +16,8 @@ namespace Tetris
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
 
-        private Texture2D block;
-
-        private Point _blockPosition = new Point(0, 0);
-
         private MovementTimer _movementTimer;
+        private Block[] _blocks;
 
         public Game1()
         {
@@ -31,20 +27,21 @@ namespace Tetris
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            block = new Texture2D(GraphicsDevice, BlockSize, BlockSize);
 
-            Color[] data = new Color[BlockSize * BlockSize];
-            for (int i = 0; i < data.Length; i++)
-                data[i] = Color.White;
-            block.SetData(data);
-
+            _blocks = new[]
+            {
+                new Block(new Point(0, 0), GraphicsDevice),
+                new Block(new Point(1, 0), GraphicsDevice),
+                new Block(new Point(0, 1), GraphicsDevice),
+                new Block(new Point(1, 1), GraphicsDevice)
+            };
 
             int screenWidth = GraphicsDevice.Viewport.Width;
             int screenHeight = GraphicsDevice.Viewport.Height;
 
             FieldDrawOffset = new Vector2(
-                (screenWidth - FieldWidth * BlockSize) / 2,
-                (screenHeight - FieldHeight * BlockSize) / 2
+                (screenWidth - FieldWidth * Constants.BlockSize) / 2,
+                (screenHeight - FieldHeight * Constants.BlockSize) / 2
 
             );
 
@@ -57,9 +54,22 @@ namespace Tetris
 
             if (_movementTimer.Update(elapsedTimeInSeconds))
             {
-                if (_blockPosition.Y < FieldHeight - 1)
+                var isOnGround = false;
+                foreach (var block in _blocks)
                 {
-                    _blockPosition.Y += 1;
+                    if (block.Position.Y == FieldHeight - 1)
+                    {
+                        isOnGround = true;
+                        break;
+                    }
+                }
+
+                if (!isOnGround)
+                {
+                    foreach (var block in _blocks)
+                    {
+                        block.Move(new Point(0, 1));
+                    }
                 }
             }
 
@@ -71,26 +81,20 @@ namespace Tetris
             GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
 
-            for (int x = 0; x < blockWidth; x++)
+            foreach (var block in _blocks)
             {
-                for (int y = 0; y < blockHeight; y++)
-                {
-                    spriteBatch.Draw(
-                        block,
-                        FieldToWorldPosition(_blockPosition + new Point(x, y)),
-                        Color.White);
-                }
+                block.Draw(spriteBatch, this);
             }
 
             spriteBatch.End();
         }
 
-        private Vector2 FieldToWorldPosition(Point blockPosition)
+        public Vector2 FieldToWorldPosition(Point blockPosition)
         {
             return new Vector2(
 
-                FieldDrawOffset.X + blockPosition.X * BlockSize,
-                FieldDrawOffset.Y + blockPosition.Y * BlockSize
+                FieldDrawOffset.X + blockPosition.X * Constants.BlockSize,
+                FieldDrawOffset.Y + blockPosition.Y * Constants.BlockSize
             );
         }
     }
