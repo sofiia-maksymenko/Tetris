@@ -6,9 +6,11 @@ namespace Tetris
     public class Tile
     {
         private Block[] _blocks;
+        private BlockPositionConverter _positionConverter;
 
         public Tile(Point startPosition, GraphicsDevice graphicsDevice, BlockPositionConverter positionConverter)
         {
+
             _blocks = new[]
             {
                 new Block(new Point(startPosition.X, startPosition.Y), graphicsDevice, positionConverter),
