@@ -17,6 +17,7 @@ namespace Tetris
 
         private MovementTimer _movementTimer;
         private Block[] _blocks;
+        private Tile _tile;
 
         public Game1()
         {
@@ -32,13 +33,7 @@ namespace Tetris
 
             _positionConverter = new BlockPositionConverter(screenWidth, screenHeight);
 
-            _blocks = new[]
-            {
-                new Block(new Point(0, 0), GraphicsDevice,_positionConverter),
-                new Block(new Point(1, 0), GraphicsDevice, _positionConverter),
-                new Block(new Point(0, 1), GraphicsDevice, _positionConverter),
-                new Block(new Point(1, 1), GraphicsDevice, _positionConverter)
-            };
+            _tile = new Tile(new Point(0, 0), GraphicsDevice, _positionConverter);
 
             _movementTimer = new MovementTimer(0.7f);
         }
@@ -49,22 +44,9 @@ namespace Tetris
 
             if (_movementTimer.Update(elapsedTimeInSeconds))
             {
-                var isOnGround = false;
-                foreach (var block in _blocks)
+                if (!_tile.IsOnGround())
                 {
-                    if (block.Position.Y == Constants.FieldHeight - 1)
-                    {
-                        isOnGround = true;
-                        break;
-                    }
-                }
-
-                if (!isOnGround)
-                {
-                    foreach (var block in _blocks)
-                    {
-                        block.Move(new Point(0, 1));
-                    }
+                    _tile.Move(new Point(0, 1));
                 }
             }
 
@@ -76,17 +58,10 @@ namespace Tetris
             GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
 
-            foreach (var block in _blocks)
-            {
-                block.Draw(spriteBatch, this);
-            }
+            _tile.Draw(spriteBatch, this);
 
             spriteBatch.End();
         }
 
-        public Vector2 FieldToWorldPosition(Point blockPosition)
-        {
-            return _positionConverter.ToScreenPosition(blockPosition);
-        }
     }
 }
