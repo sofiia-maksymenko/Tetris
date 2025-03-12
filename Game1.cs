@@ -33,7 +33,7 @@ namespace Tetris
 
             _positionConverter = new BlockPositionConverter(screenWidth, screenHeight);
 
-            _tile = new Tile(new Point(0, 0), GraphicsDevice, _positionConverter);
+            _tile = new Tile(new Point(1, 3), GraphicsDevice, _positionConverter);
 
             _movementTimer = new MovementTimer(0.7f);
         }
@@ -58,7 +58,7 @@ namespace Tetris
             GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
 
-            _tile.Draw(spriteBatch, this);
+            _tile.Draw(spriteBatch);
 
             spriteBatch.End();
         }
