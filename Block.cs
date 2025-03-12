@@ -31,7 +31,7 @@ public class Block
         Position += offset;
     }
 
-    public void Draw(SpriteBatch spriteBatch, Game1 game)
+    public void Draw(SpriteBatch spriteBatch)
     {
         spriteBatch.Draw(
             _block,
