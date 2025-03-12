@@ -3,7 +3,7 @@ namespace Tetris
 {
     public class BlockPositionConverter
     {
-        private readonly Vector2 _fieldDrawOffset;
+        private Vector2 _fieldDrawOffset;
 
         public BlockPositionConverter(int screenWidth, int screenHeight)
         {

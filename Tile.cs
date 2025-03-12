@@ -38,11 +38,11 @@ namespace Tetris
             return false;
         }
 
-        public void Draw(SpriteBatch spriteBatch, Game1 game)
+        public void Draw(SpriteBatch spriteBatch)
         {
             foreach (var block in _blocks)
             {
-                block.Draw(spriteBatch, game);
+                block.Draw(spriteBatch);
             }
         }
     }
