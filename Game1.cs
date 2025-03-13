@@ -15,22 +15,21 @@ namespace Tetris
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferWidth = Constants.ScreenWidth;
+            graphics.PreferredBackBufferHeight = Constants.ScreenHeight;
         }
 
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            int screenWidth = GraphicsDevice.Viewport.Width;
-            int screenHeight = GraphicsDevice.Viewport.Height;
-
-            _positionConverter = new BlockPositionConverter(screenWidth, screenHeight);
+            _positionConverter = new BlockPositionConverter(Constants.ScreenWidth, Constants.ScreenHeight);
 
             _tile = new Tile(new Point(1, 3), GraphicsDevice);
 
             _level = new Level(GraphicsDevice, _positionConverter);
 
-            _movementTimer = new MovementTimer(0.7f);
+            _movementTimer = new MovementTimer(Constants.FallOneStepDurationSeconds);
         }
 
         protected override void Update(GameTime gameTime)

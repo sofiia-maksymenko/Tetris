@@ -31,16 +31,17 @@ namespace Tetris
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            Vector2 screenSize = _positionConverter.ToScreenPosition(new Point(Constants.FieldWidth, Constants.FieldHeight));
-            int width = (int)screenSize.X;
-            int height = (int)screenSize.Y;
+            Vector2 topLeft = _positionConverter.ToScreenPosition(new Point(0, 0));
+            Vector2 bottomRight = _positionConverter.ToScreenPosition(new Point(Constants.FieldWidth, Constants.FieldHeight));
+            int width = (int)(bottomRight.X - topLeft.X);
+            int height = (int)(bottomRight.Y - topLeft.Y);
 
-            int thickness = 3;
+            const int thickness = 3;
 
-            spriteBatch.Draw(_borderTexture, new Rectangle(0, 0, width, thickness), Color.White);
-            spriteBatch.Draw(_borderTexture, new Rectangle(0, 0, thickness, height), Color.White);
-            spriteBatch.Draw(_borderTexture, new Rectangle(width - thickness, 0, thickness, height), Color.White);
-            spriteBatch.Draw(_borderTexture, new Rectangle(0, height - thickness, width, thickness), Color.White);
+            spriteBatch.Draw(_borderTexture, new Rectangle((int)topLeft.X, (int)topLeft.Y, width, thickness), Color.White);
+            spriteBatch.Draw(_borderTexture, new Rectangle((int)topLeft.X, (int)topLeft.Y, thickness, height), Color.White);
+            spriteBatch.Draw(_borderTexture, new Rectangle((int)topLeft.X  + width - thickness, (int)topLeft.Y, thickness, height), Color.White);
+            spriteBatch.Draw(_borderTexture, new Rectangle((int)topLeft.X, (int)topLeft.Y + height - thickness, width, thickness), Color.White);
         }
     }
 }
