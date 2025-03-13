@@ -5,12 +5,10 @@ namespace Tetris
 {
     public class Tile
     {
-        private Block[] _blocks;
-        private BlockPositionConverter _positionConverter;
+        public Block[] _blocks;
 
         public Tile(Point startPosition, GraphicsDevice graphicsDevice, BlockPositionConverter positionConverter)
         {
-
             _blocks = new[]
             {
                 new Block(new Point(startPosition.X, startPosition.Y), graphicsDevice, positionConverter),
@@ -47,6 +45,10 @@ namespace Tetris
                 block.Draw(spriteBatch);
             }
         }
+
+        public Block[] GetBlocks()
+        {
+            return _blocks;
+        }
     }
 }
-

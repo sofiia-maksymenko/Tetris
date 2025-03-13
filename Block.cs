@@ -27,8 +27,8 @@ public class Block
     }
 
     public void Move(Point offset)
-    { 
-        Position += offset;
+    {
+        Position = new Point(Position.X + offset.X, Position.Y + offset.Y);
     }
 
     public void Draw(SpriteBatch spriteBatch)

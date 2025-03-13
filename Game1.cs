@@ -5,19 +5,12 @@ namespace Tetris
 {
     public class Game1 : Game
     {
-        
         private BlockPositionConverter _positionConverter;
-
-
-        private const int blockWidth = 2;
-        private const int blockHeight = 2;
-
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
-
         private MovementTimer _movementTimer;
-        private Block[] _blocks;
         private Tile _tile;
+        private Level _level;
 
         public Game1()
         {
@@ -35,6 +28,8 @@ namespace Tetris
 
             _tile = new Tile(new Point(1, 3), GraphicsDevice, _positionConverter);
 
+            _level = new Level(GraphicsDevice, _positionConverter);
+
             _movementTimer = new MovementTimer(0.7f);
         }
 
@@ -44,9 +39,13 @@ namespace Tetris
 
             if (_movementTimer.Update(elapsedTimeInSeconds))
             {
-                if (!_tile.IsOnGround())
+                if (!_level.IsColliding(_tile) && !_tile.IsOnGround())
                 {
                     _tile.Move(new Point(0, 1));
+                }
+                else
+                {
+                    _tile = new Tile(new Point(5, 0), GraphicsDevice, _positionConverter); // Создаём новый Tile
                 }
             }
 
@@ -58,10 +57,10 @@ namespace Tetris
             GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
 
+            _level.Draw(spriteBatch);
             _tile.Draw(spriteBatch);
 
             spriteBatch.End();
         }
-
     }
 }
