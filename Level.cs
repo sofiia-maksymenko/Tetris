@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 
 namespace Tetris
 {
@@ -8,6 +9,8 @@ namespace Tetris
     {
         private Texture2D _borderTexture;
         private BlockPositionConverter _positionConverter;
+
+        private List<Block> _placedBlocks = new List<Block>();
 
         public Level(GraphicsDevice graphicsDevice, BlockPositionConverter positionConverter)
         {
@@ -26,6 +29,15 @@ namespace Tetris
                 {
                     return true;
                 }
+
+
+                foreach (var placedBlock in _placedBlocks)
+                {
+                    if (block.Position == placedBlock.Position)
+                    {
+                        return true;
+                    }
+                }
             }
             return false;
         }
@@ -43,11 +55,16 @@ namespace Tetris
             spriteBatch.Draw(_borderTexture, new Rectangle((int)topLeft.X, (int)topLeft.Y, thickness, height), Color.White);
             spriteBatch.Draw(_borderTexture, new Rectangle((int)topLeft.X  + width - thickness, (int)topLeft.Y, thickness, height), Color.White);
             spriteBatch.Draw(_borderTexture, new Rectangle((int)topLeft.X, (int)topLeft.Y + height - thickness, width, thickness), Color.White);
+
+            foreach (var block in _placedBlocks)
+            {
+                block.Draw(spriteBatch, _positionConverter);
+            }
         }
 
         public void IntegrateTile(Tile tile)
         {
-
+            _placedBlocks.AddRange(tile.GetBlocks());
         }
     }
 }
