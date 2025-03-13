@@ -24,6 +24,8 @@ public class Block
         _block.SetData(data);
     }
 
+    public Color Color { get; set; }
+
     public void Move(Point offset)
     {
         Position = new Point(Position.X + offset.X, Position.Y + offset.Y);
@@ -31,9 +33,15 @@ public class Block
 
     public void Draw(SpriteBatch spriteBatch, BlockPositionConverter positionConverter)
     {
+        var position = positionConverter.ToScreenPosition(Position);
         spriteBatch.Draw(
             _block,
-            positionConverter.ToScreenPosition(Position),
+            position,
             Color.White);
+        spriteBatch.Draw(
+            _block,
+            new Rectangle((int)position.X + 1, (int)position.Y + 1, Constants.BlockSize-2, Constants.BlockSize-2),
+            null,
+            Color);
     }
 }

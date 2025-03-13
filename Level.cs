@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace Tetris
 {
@@ -42,6 +43,11 @@ namespace Tetris
             spriteBatch.Draw(_borderTexture, new Rectangle((int)topLeft.X, (int)topLeft.Y, thickness, height), Color.White);
             spriteBatch.Draw(_borderTexture, new Rectangle((int)topLeft.X  + width - thickness, (int)topLeft.Y, thickness, height), Color.White);
             spriteBatch.Draw(_borderTexture, new Rectangle((int)topLeft.X, (int)topLeft.Y + height - thickness, width, thickness), Color.White);
+        }
+
+        public void IntegrateTile(Tile tile)
+        {
+
         }
     }
 }

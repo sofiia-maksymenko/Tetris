@@ -22,14 +22,11 @@ namespace Tetris
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
             _positionConverter = new BlockPositionConverter(Constants.ScreenWidth, Constants.ScreenHeight);
-
-            _tile = new Tile(new Point(1, 3), GraphicsDevice);
-
             _level = new Level(GraphicsDevice, _positionConverter);
-
             _movementTimer = new MovementTimer(Constants.FallOneStepDurationSeconds);
+
+            GenerateNewTile();
         }
 
         protected override void Update(GameTime gameTime)
@@ -38,13 +35,14 @@ namespace Tetris
 
             if (_movementTimer.Update(elapsedTimeInSeconds))
             {
-                if (!_level.IsColliding(_tile) && !_tile.IsOnGround())
+                if (_level.IsColliding(_tile) || _tile.IsOnGround())
                 {
-                    _tile.Move(new Point(0, 1));
+                    _level.IntegrateTile(_tile);
+                    GenerateNewTile();
                 }
                 else
                 {
-                    _tile = new Tile(new Point(5, 0), GraphicsDevice); 
+                    _tile.Move(new Point(0, 1));
                 }
             }
 
@@ -60,6 +58,11 @@ namespace Tetris
             _tile.Draw(spriteBatch, _positionConverter);
 
             spriteBatch.End();
+        }
+
+        private void GenerateNewTile()
+        {
+            _tile = new Tile(new Point(5, 0), TileType.O, GraphicsDevice);
         }
     }
 }
