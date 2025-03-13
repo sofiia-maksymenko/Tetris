@@ -7,14 +7,14 @@ namespace Tetris
     {
         public Block[] _blocks;
 
-        public Tile(Point startPosition, GraphicsDevice graphicsDevice, BlockPositionConverter positionConverter)
+        public Tile(Point startPosition, GraphicsDevice graphicsDevice)
         {
             _blocks = new[]
             {
-                new Block(new Point(startPosition.X, startPosition.Y), graphicsDevice, positionConverter),
-                new Block(new Point(startPosition.X + 1, startPosition.Y), graphicsDevice, positionConverter),
-                new Block(new Point(startPosition.X, startPosition.Y + 1), graphicsDevice, positionConverter),
-                new Block(new Point(startPosition.X + 1, startPosition.Y + 1), graphicsDevice, positionConverter)
+                new Block(new Point(startPosition.X, startPosition.Y), graphicsDevice),
+                new Block(new Point(startPosition.X + 1, startPosition.Y), graphicsDevice),
+                new Block(new Point(startPosition.X, startPosition.Y + 1), graphicsDevice),
+                new Block(new Point(startPosition.X + 1, startPosition.Y + 1), graphicsDevice)
             };
         }
 
@@ -38,11 +38,11 @@ namespace Tetris
             return false;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, BlockPositionConverter positionConverter)
         {
             foreach (var block in _blocks)
             {
-                block.Draw(spriteBatch);
+                block.Draw(spriteBatch, positionConverter);
             }
         }
 

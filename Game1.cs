@@ -26,7 +26,7 @@ namespace Tetris
 
             _positionConverter = new BlockPositionConverter(screenWidth, screenHeight);
 
-            _tile = new Tile(new Point(1, 3), GraphicsDevice, _positionConverter);
+            _tile = new Tile(new Point(1, 3), GraphicsDevice);
 
             _level = new Level(GraphicsDevice, _positionConverter);
 
@@ -45,7 +45,7 @@ namespace Tetris
                 }
                 else
                 {
-                    _tile = new Tile(new Point(5, 0), GraphicsDevice, _positionConverter); // Создаём новый Tile
+                    _tile = new Tile(new Point(5, 0), GraphicsDevice); 
                 }
             }
 
@@ -58,7 +58,7 @@ namespace Tetris
             spriteBatch.Begin();
 
             _level.Draw(spriteBatch);
-            _tile.Draw(spriteBatch);
+            _tile.Draw(spriteBatch, _positionConverter);
 
             spriteBatch.End();
         }
