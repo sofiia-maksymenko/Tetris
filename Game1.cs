@@ -9,6 +9,7 @@ namespace Tetris
         private BlockPositionConverter _positionConverter;
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
+        private Random _random = new Random();
         private MovementTimer _movementTimer;
         private Tile _tile;
         private Level _level;
@@ -63,9 +64,9 @@ namespace Tetris
 
         private void GenerateNewTile()
         {
-            _tile = new Tile(new Point(5, 0), TileType.J, GraphicsDevice);
-            //TileType randomType = (TileType)(new Random().Next(Enum.GetValues(typeof(TileType)).Length));
-            //_tile = new Tile(new Point(5, 0), randomType, graphicsDevice);
+            TileType randomType = (TileType)_random.Next(Enum.GetValues(typeof(TileType)).Length);
+            _tile = new Tile(new Point(5, 0), randomType, GraphicsDevice);
+
         }
     }
 }
