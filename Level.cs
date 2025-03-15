@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Tetris
 {
@@ -30,16 +31,18 @@ namespace Tetris
                     return true;
                 }
 
-
-                foreach (var placedBlock in _placedBlocks)
+                if (IsOccupied(block.Position))
                 {
-                    if (block.Position == placedBlock.Position)
-                    {
-                        return true;
-                    }
+                    return true;
                 }
+
             }
             return false;
+        }
+
+        public bool IsOccupied(Point position)
+        {
+            return _placedBlocks.Any(block => block.Position == position);
         }
 
         public void Draw(SpriteBatch spriteBatch)

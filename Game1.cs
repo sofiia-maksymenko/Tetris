@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace Tetris
 {
@@ -35,14 +36,14 @@ namespace Tetris
 
             if (_movementTimer.Update(elapsedTimeInSeconds))
             {
-                if (_level.IsColliding(_tile) || _tile.IsOnGround())
+                if (_tile.CanMoveDown(_level))
                 {
-                    _level.IntegrateTile(_tile);
-                    GenerateNewTile();
+                    _tile.Move(new Point(0, 1));
                 }
                 else
                 {
-                    _tile.Move(new Point(0, 1));
+                    _level.IntegrateTile(_tile);
+                    GenerateNewTile();
                 }
             }
 
@@ -62,7 +63,9 @@ namespace Tetris
 
         private void GenerateNewTile()
         {
-            _tile = new Tile(new Point(5, 0), TileType.O, GraphicsDevice);
+            _tile = new Tile(new Point(5, 0), TileType.J, GraphicsDevice);
+            //TileType randomType = (TileType)(new Random().Next(Enum.GetValues(typeof(TileType)).Length));
+            //_tile = new Tile(new Point(5, 0), randomType, graphicsDevice);
         }
     }
 }
