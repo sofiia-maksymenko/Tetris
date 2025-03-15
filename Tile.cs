@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Tetris
 {
@@ -85,6 +87,68 @@ namespace Tetris
                 block.Move(offset);
             }
         }
+
+        public void Rotate(bool clockwise, Level level)
+        {
+            if (_blocks.Length == 0) return;
+
+            Point center = _blocks[0].Position;
+
+            Point[] oldPositions = new Point[_blocks.Length];
+            for (int i = 0; i < _blocks.Length; i++)
+            {
+                oldPositions[i] = _blocks[i].Position;
+            }
+
+            for (int i = 0; i < _blocks.Length; i++)
+            {
+                int relativeX = _blocks[i].Position.X - center.X;
+                int relativeY = _blocks[i].Position.Y - center.Y;
+
+                int newX, newY;
+
+                if (clockwise)
+                {
+                    newX = -relativeY;
+                    newY = relativeX;
+                }
+                else
+                {
+                    newX = relativeY;
+                    newY = -relativeX;
+                }
+
+                _blocks[i].Position = new Point(center.X + newX, center.Y + newY);
+            }
+
+
+            if (!CanRotate(level))
+            {
+
+                for (int i = 0; i < _blocks.Length; i++)
+                {
+                    _blocks[i].Position = oldPositions[i];
+                }
+            }
+        }
+
+        private bool CanRotate(Level level)
+        {
+            foreach (var block in _blocks)
+            {
+                if (block.Position.X < 0 || block.Position.X >= Constants.FieldWidth || block.Position.Y >= Constants.FieldHeight)
+                {
+                    return false;
+                }
+                if (level.IsOccupied(block.Position))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+
 
         public bool IsOnGround()
         {

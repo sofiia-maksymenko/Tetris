@@ -94,6 +94,16 @@ namespace Tetris
                 _tile.Move(new Point(0, 1));
             }
 
+            if (state.IsKeyDown(Keys.Up) && _previousKeyboardState.IsKeyUp(Keys.Up))
+            {
+                _tile.Rotate(clockwise: true, _level); 
+            }
+
+            if (state.IsKeyDown(Keys.Z) && _previousKeyboardState.IsKeyUp(Keys.Z))
+            {
+                _tile.Rotate(clockwise: false, _level); 
+            }
+
             _previousKeyboardState = state;
         }
     }
