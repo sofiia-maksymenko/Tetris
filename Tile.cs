@@ -120,6 +120,28 @@ namespace Tetris
         }
 
 
+        public bool CanMove(Point offset, Level level)
+        {
+            foreach (var block in _blocks)
+            {
+                Point newPosition = new Point(block.Position.X + offset.X, block.Position.Y + offset.Y);
+
+                
+                if (newPosition.X < 0 || newPosition.X >= Constants.FieldWidth || newPosition.Y >= Constants.FieldHeight)
+                {
+                    return false;
+                }
+
+                
+                if (level.IsOccupied(newPosition))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+
         public void Draw(SpriteBatch spriteBatch, BlockPositionConverter positionConverter)
         {
             foreach (var block in _blocks)

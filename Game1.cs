@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 
 namespace Tetris
@@ -10,6 +11,7 @@ namespace Tetris
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         private Random _random = new Random();
+        private KeyboardState _previousKeyboardState;
         private MovementTimer _movementTimer;
         private Tile _tile;
         private Level _level;
@@ -35,6 +37,11 @@ namespace Tetris
         {
             var elapsedTimeInSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+            KeyboardState state = Keyboard.GetState();
+            
+
+            HandleInput(state);
+
             if (_movementTimer.Update(elapsedTimeInSeconds))
             {
                 if (_tile.CanMoveDown(_level))
@@ -48,6 +55,7 @@ namespace Tetris
                 }
             }
 
+            _previousKeyboardState = state;
             base.Update(gameTime);
         }
 
@@ -67,6 +75,26 @@ namespace Tetris
             TileType randomType = (TileType)_random.Next(Enum.GetValues(typeof(TileType)).Length);
             _tile = new Tile(new Point(5, 0), randomType, GraphicsDevice);
 
+        }
+
+        private void HandleInput(KeyboardState state)
+        {
+            if (state.IsKeyDown(Keys.Left) && _previousKeyboardState.IsKeyUp(Keys.Left) && _tile.CanMove(new Point(-1, 0), _level))
+            {
+                _tile.Move(new Point(-1, 0));
+            }
+
+            if (state.IsKeyDown(Keys.Right) && _previousKeyboardState.IsKeyUp(Keys.Right) && _tile.CanMove(new Point(1, 0), _level))
+            {
+                _tile.Move(new Point(1, 0));
+            }
+
+            if (state.IsKeyDown(Keys.Down) && _previousKeyboardState.IsKeyUp(Keys.Down) && _tile.CanMove(new Point(0, 1), _level))
+            {
+                _tile.Move(new Point(0, 1));
+            }
+
+            _previousKeyboardState = state;
         }
     }
 }
