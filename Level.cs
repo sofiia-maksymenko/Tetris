@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Tetris;
 
 namespace Tetris
 {
@@ -10,8 +11,8 @@ namespace Tetris
     {
         private Texture2D _borderTexture;
         private BlockPositionConverter _positionConverter;
-
         private List<Block> _placedBlocks = new List<Block>();
+        private int score = 0;
 
         public Level(GraphicsDevice graphicsDevice, BlockPositionConverter positionConverter)
         {
@@ -53,15 +54,23 @@ namespace Tetris
 
         private void ClearFullRows()
         {
+            int rowsCleared = 0;
             for (int y = Constants.FieldHeight - 1; y >= 0; y--) 
             {
                 if (IsRowFull(y)) 
                 {
                     RemoveRow(y); 
-                    ShiftRowsDown(y); 
+                    ShiftRowsDown(y);
+                    rowsCleared++;
                     y++; 
                 }
             }
+            score += rowsCleared * 50;
+        }
+
+        public int GetScore()
+        {
+            return score;
         }
 
 
@@ -120,7 +129,9 @@ namespace Tetris
         public void IntegrateTile(Tile tile)
         {
             _placedBlocks.AddRange(tile.GetBlocks());
+            score += 10;
             ClearFullRows();
         }
     }
 }
+

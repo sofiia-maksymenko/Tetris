@@ -10,6 +10,7 @@ namespace Tetris
         private BlockPositionConverter _positionConverter;
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
+        private SpriteFont font;
         private Random _random = new Random();
         private KeyboardState _previousKeyboardState;
         private MovementTimer _movementTimer;
@@ -25,12 +26,16 @@ namespace Tetris
 
         protected override void LoadContent()
         {
+            Console.WriteLine("LoadContent started");
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            font = Content.Load<SpriteFont>("Arial");
+            Console.WriteLine("Font loaded");
             _positionConverter = new BlockPositionConverter(Constants.ScreenWidth, Constants.ScreenHeight);
             _level = new Level(GraphicsDevice, _positionConverter);
             _movementTimer = new MovementTimer(Constants.FallOneStepDurationSeconds);
 
             GenerateNewTile();
+            Console.WriteLine("LoadContent finished");
         }
 
         protected override void Update(GameTime gameTime)
@@ -63,6 +68,8 @@ namespace Tetris
         {
             GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
+
+            spriteBatch.DrawString(font, "Punkte: " + _level.GetScore(), new Vector2(10, 10), Color.White);
 
             _level.Draw(spriteBatch);
             _tile.Draw(spriteBatch, _positionConverter);
