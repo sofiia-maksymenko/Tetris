@@ -42,7 +42,59 @@ namespace Tetris
 
         public bool IsOccupied(Point position)
         {
-            return _placedBlocks.Any(block => block.Position == position);
+            foreach (var block in _placedBlocks)
+            {
+                if (block.Position == position)
+                    return true;
+            }
+            return false;
+        }
+
+
+        private void ClearFullRows()
+        {
+            for (int y = Constants.FieldHeight - 1; y >= 0; y--) 
+            {
+                if (IsRowFull(y)) 
+                {
+                    RemoveRow(y); 
+                    ShiftRowsDown(y); 
+                    y++; 
+                }
+            }
+        }
+
+
+        private bool IsRowFull(int y)
+        {
+            int count = 0;
+            foreach (var block in _placedBlocks)
+            {
+                if (block.Position.Y == y)
+                    count++;
+
+                if (count == Constants.FieldWidth)
+                    return true;
+            }
+            return false;
+        }
+
+
+        private void RemoveRow(int y)
+        {
+            _placedBlocks.RemoveAll(b => b.Position.Y == y);
+        }
+
+
+        private void ShiftRowsDown(int removedRow)
+        {
+            foreach (var block in _placedBlocks)
+            {
+                if (block.Position.Y < removedRow)
+                {
+                    block.Position = new Point(block.Position.X, block.Position.Y + 1);
+                }
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -68,6 +120,7 @@ namespace Tetris
         public void IntegrateTile(Tile tile)
         {
             _placedBlocks.AddRange(tile.GetBlocks());
+            ClearFullRows();
         }
     }
 }
