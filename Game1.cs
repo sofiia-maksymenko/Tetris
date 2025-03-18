@@ -12,7 +12,7 @@ namespace Tetris
         private SpriteBatch spriteBatch;
         private SpriteFont font;
         private Random _random = new Random();
-        private KeyboardState _previousKeyboardState;
+        private KeyboardHandler _keyboardHandler;
         private MovementTimer _movementTimer;
         private Tile _tile;
         private Level _level;
@@ -22,30 +22,27 @@ namespace Tetris
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferWidth = Constants.ScreenWidth;
             graphics.PreferredBackBufferHeight = Constants.ScreenHeight;
+            _keyboardHandler = new KeyboardHandler();
         }
 
         protected override void LoadContent()
         {
-            Console.WriteLine("LoadContent started");
             spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("Arial");
-            Console.WriteLine("Font loaded");
             _positionConverter = new BlockPositionConverter(Constants.ScreenWidth, Constants.ScreenHeight);
             _level = new Level(GraphicsDevice, _positionConverter);
             _movementTimer = new MovementTimer(Constants.FallOneStepDurationSeconds);
 
             GenerateNewTile();
-            Console.WriteLine("LoadContent finished");
         }
 
         protected override void Update(GameTime gameTime)
         {
+            _keyboardHandler.Update();
+
             var elapsedTimeInSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            KeyboardState state = Keyboard.GetState();
             
-
-            HandleInput(state);
+            HandleInput();
 
             if (_movementTimer.Update(elapsedTimeInSeconds))
             {
@@ -59,8 +56,6 @@ namespace Tetris
                     GenerateNewTile();
                 }
             }
-
-            _previousKeyboardState = state;
             base.Update(gameTime);
         }
 
@@ -84,34 +79,32 @@ namespace Tetris
 
         }
 
-        private void HandleInput(KeyboardState state)
+        private void HandleInput()
         {
-            if (state.IsKeyDown(Keys.Left) && _previousKeyboardState.IsKeyUp(Keys.Left) && _tile.CanMove(new Point(-1, 0), _level))
+            if (_keyboardHandler.IsPressedOnce(Keys.Left) && _tile.CanMove(new Point(-1, 0), _level))
             {
                 _tile.Move(new Point(-1, 0));
             }
 
-            if (state.IsKeyDown(Keys.Right) && _previousKeyboardState.IsKeyUp(Keys.Right) && _tile.CanMove(new Point(1, 0), _level))
+            if (_keyboardHandler.IsPressedOnce(Keys.Right) && _tile.CanMove(new Point(1, 0), _level))
             {
                 _tile.Move(new Point(1, 0));
             }
 
-            if (state.IsKeyDown(Keys.Down) && _previousKeyboardState.IsKeyUp(Keys.Down) && _tile.CanMove(new Point(0, 1), _level))
+            if (_keyboardHandler.IsPressedOnce(Keys.Down) && _tile.CanMove(new Point(0, 1), _level))
             {
                 _tile.Move(new Point(0, 1));
             }
 
-            if (state.IsKeyDown(Keys.Up) && _previousKeyboardState.IsKeyUp(Keys.Up))
+            if (_keyboardHandler.IsPressedOnce(Keys.Up))
             {
-                _tile.Rotate(clockwise: true, _level); 
+                _tile.Rotate(clockwise: true, _level);
             }
 
-            if (state.IsKeyDown(Keys.Z) && _previousKeyboardState.IsKeyUp(Keys.Z))
+            if (_keyboardHandler.IsPressedOnce(Keys.Z))
             {
-                _tile.Rotate(clockwise: false, _level); 
+                _tile.Rotate(clockwise: false, _level);
             }
-
-            _previousKeyboardState = state;
         }
     }
 }
