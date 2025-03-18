@@ -7,6 +7,12 @@ namespace Tetris
         private KeyboardState _currentState;
         private KeyboardState _previousState;
 
+        public KeyboardHandler()
+        {
+            _currentState = Keyboard.GetState();
+            _previousState = _currentState;
+        }
+
         public void Update()
         {
             _previousState = _currentState;
