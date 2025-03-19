@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 
 
 namespace Tetris
@@ -16,7 +15,7 @@ namespace Tetris
 
     public class Tile
     {
-        public Block[] _blocks;
+        private readonly Block[] _blocks;
 
         public Tile(Point startPosition, TileType tileType, GraphicsDevice graphicsDevice)
         {
@@ -88,6 +87,58 @@ namespace Tetris
             }
         }
 
+        public bool CanMoveDown(Level level)
+        {
+            foreach (var block in _blocks)
+            {
+                Point newPosition = new Point(block.Position.X, block.Position.Y + 1);
+
+
+                if (newPosition.Y >= Constants.FieldHeight)
+                {
+                    return false;
+                }
+
+
+                if (level.IsOccupied(newPosition))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public bool CanMove(Point offset, Level level)
+        {
+            foreach (var block in _blocks)
+            {
+                Point newPosition = new Point(block.Position.X + offset.X, block.Position.Y + offset.Y);
+
+
+                if (newPosition.X < 0 || newPosition.X >= Constants.FieldWidth || newPosition.Y >= Constants.FieldHeight)
+                {
+                    return false;
+                }
+
+
+                if (level.IsOccupied(newPosition))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public void Draw(SpriteBatch spriteBatch, BlockPositionConverter positionConverter)
+        {
+            foreach (var block in _blocks)
+            {
+                block.Draw(spriteBatch, positionConverter);
+            }
+        }
+
+        public Block[] Blocks => _blocks;
+
         public void Rotate(bool clockwise, Level level)
         {
             if (_blocks.Length == 0) return;
@@ -146,78 +197,7 @@ namespace Tetris
                 }
             }
             return true;
-        }
-
-
-
-        public bool IsOnGround()
-        {
-            foreach (var block in _blocks)
-            {
-                if (block.Position.Y == Constants.FieldHeight - 1)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public bool CanMoveDown(Level level)
-        {
-            foreach (var block in _blocks)
-            {
-                Point newPosition = new Point(block.Position.X, block.Position.Y + 1);
-
-                
-                if (newPosition.Y >= Constants.FieldHeight)
-                {
-                    return false;
-                }
-
-
-                if (level.IsOccupied(newPosition))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-
-        public bool CanMove(Point offset, Level level)
-        {
-            foreach (var block in _blocks)
-            {
-                Point newPosition = new Point(block.Position.X + offset.X, block.Position.Y + offset.Y);
-
-                
-                if (newPosition.X < 0 || newPosition.X >= Constants.FieldWidth || newPosition.Y >= Constants.FieldHeight)
-                {
-                    return false;
-                }
-
-                
-                if (level.IsOccupied(newPosition))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-
-        public void Draw(SpriteBatch spriteBatch, BlockPositionConverter positionConverter)
-        {
-            foreach (var block in _blocks)
-            {
-                block.Draw(spriteBatch, positionConverter);
-            }
-        }
-
-        public Block[] GetBlocks()
-        {
-            return _blocks;
-        }
+        } 
     }
 }
 

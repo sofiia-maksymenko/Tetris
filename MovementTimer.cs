@@ -2,8 +2,8 @@ namespace Tetris;
 
 public class MovementTimer
 {
-    private float _fallInterval;
-    private float _fallTimer;
+    private readonly float _fallInterval;
+    private  float _fallTimer;
 
     public MovementTimer(float fallInterval)
     {

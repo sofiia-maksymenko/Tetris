@@ -23,10 +23,5 @@ namespace Tetris
         {
             return _currentState.IsKeyDown(key) && _previousState.IsKeyUp(key);
         }
-
-        public bool IsKeyDown(Keys key)
-        {
-            return _currentState.IsKeyDown(key);
-        }
     }
 }

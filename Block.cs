@@ -5,7 +5,7 @@ namespace Tetris;
 
 public class Block
 {
-    private Texture2D _block;
+    private readonly Texture2D _blockTexture;
 
     public Point Position { get; set; }
 
@@ -13,7 +13,7 @@ public class Block
     {
         Position = startPosition;
 
-        _block = new Texture2D(
+        _blockTexture = new Texture2D(
             graphicsDevice, 
             Constants.BlockSize, 
             Constants.BlockSize);
@@ -21,7 +21,7 @@ public class Block
         Color[] data = new Color[Constants.BlockSize * Constants.BlockSize];
         for (int i = 0; i < data.Length; i++)
             data[i] = Color.White;
-        _block.SetData(data);
+        _blockTexture.SetData(data);
     }
 
     public Color Color { get; set; }
@@ -34,12 +34,14 @@ public class Block
     public void Draw(SpriteBatch spriteBatch, BlockPositionConverter positionConverter)
     {
         var position = positionConverter.ToScreenPosition(Position);
+
         spriteBatch.Draw(
-            _block,
+            _blockTexture,
             position,
             Color.White);
+
         spriteBatch.Draw(
-            _block,
+            _blockTexture,
             new Rectangle((int)position.X + 1, (int)position.Y + 1, Constants.BlockSize-2, Constants.BlockSize-2),
             null,
             Color);

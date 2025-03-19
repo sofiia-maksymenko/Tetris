@@ -10,5 +10,4 @@ public static class Constants
     public const int FieldHeight = 20;
 
     public const float FallOneStepDurationSeconds = 0.7f;
-
 }

@@ -8,10 +8,10 @@ namespace Tetris
     public class Game1 : Game
     {
         private BlockPositionConverter _positionConverter;
-        private GraphicsDeviceManager graphics;
-        private SpriteBatch spriteBatch;
-        private SpriteFont font;
-        private Random _random = new Random();
+        private readonly GraphicsDeviceManager _graphics;
+        private SpriteBatch _spriteBatch;
+        private ScoreDisplay _scoreDisplay;
+        private readonly Random _random = Random.Shared;
         private KeyboardHandler _keyboardHandler;
         private MovementTimer _movementTimer;
         private Tile _tile;
@@ -19,29 +19,30 @@ namespace Tetris
 
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = Constants.ScreenWidth;
-            graphics.PreferredBackBufferHeight = Constants.ScreenHeight;
-            _keyboardHandler = new KeyboardHandler();
+            _graphics = new GraphicsDeviceManager(this);
+            _graphics.PreferredBackBufferWidth = Constants.ScreenWidth;
+            _graphics.PreferredBackBufferHeight = Constants.ScreenHeight;
         }
 
         protected override void LoadContent()
         {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            font = Content.Load<SpriteFont>("Arial");
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
             _positionConverter = new BlockPositionConverter(Constants.ScreenWidth, Constants.ScreenHeight);
             _level = new Level(GraphicsDevice, _positionConverter);
             _movementTimer = new MovementTimer(Constants.FallOneStepDurationSeconds);
+            _keyboardHandler = new KeyboardHandler();
+            _scoreDisplay = new ScoreDisplay(Content.Load<SpriteFont>("Arial"), _level);
 
             GenerateNewTile();
         }
 
         protected override void Update(GameTime gameTime)
         {
+        
+            var elapsedTimeInSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
             _keyboardHandler.Update();
 
-            var elapsedTimeInSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            
             HandleInput();
 
             if (_movementTimer.Update(elapsedTimeInSeconds))
@@ -69,14 +70,12 @@ namespace Tetris
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            spriteBatch.Begin();
+            _spriteBatch.Begin();
+            _scoreDisplay.Draw(_spriteBatch);
+            _level.Draw(_spriteBatch);
+            _tile.Draw(_spriteBatch, _positionConverter);
 
-            spriteBatch.DrawString(font, "Punkte: " + _level.GetScore(), new Vector2(10, 10), Color.White);
-
-            _level.Draw(spriteBatch);
-            _tile.Draw(spriteBatch, _positionConverter);
-
-            spriteBatch.End();
+            _spriteBatch.End();
         }
 
         private void GenerateNewTile()
@@ -115,6 +114,14 @@ namespace Tetris
             if (_keyboardHandler.IsPressedOnce(Keys.Z))
             {
                 _tile.Rotate(clockwise: false, _level);
+            }
+
+            if (_keyboardHandler.IsPressedOnce(Keys.Space))
+            {
+                while (_tile.CanMove(new Point(0, 1), _level)) 
+                {
+                    _tile.Move(new Point(0, 1));
+                }
             }
         }
     }
