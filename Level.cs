@@ -106,6 +106,18 @@ namespace Tetris
             }
         }
 
+        public bool HasBlocksAboveField()
+        {
+            foreach (var block in _placedBlocks)
+            {
+                if (block.Position.Y < 0) 
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             Vector2 topLeft = _positionConverter.ToScreenPosition(new Point(0, 0));

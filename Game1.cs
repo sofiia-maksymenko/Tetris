@@ -53,7 +53,14 @@ namespace Tetris
                 else
                 {
                     _level.IntegrateTile(_tile);
+
                     GenerateNewTile();
+
+                    if (IsGameOver())
+                    {
+                        Exit();
+                        return;
+                    }
                 }
             }
             base.Update(gameTime);
@@ -76,7 +83,11 @@ namespace Tetris
         {
             TileType randomType = (TileType)_random.Next(Enum.GetValues(typeof(TileType)).Length);
             _tile = new Tile(new Point(5, 0), randomType, GraphicsDevice);
+        }
 
+        private bool IsGameOver()
+        {
+            return _level.HasBlocksAboveField() || _level.IsOccupied(new Point(5, 0)); 
         }
 
         private void HandleInput()
