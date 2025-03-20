@@ -15,6 +15,7 @@ namespace Tetris
         private KeyboardHandler _keyboardHandler;
         private MovementTimer _movementTimer;
         private Tile _tile;
+        private Tile _nextTile;
         private Level _level;
 
         public Game1()
@@ -33,12 +34,13 @@ namespace Tetris
             _keyboardHandler = new KeyboardHandler();
             _scoreDisplay = new ScoreDisplay(Content.Load<SpriteFont>("Arial"), _level);
 
+            _nextTile = GenerateRandomTile();
             GenerateNewTile();
         }
 
         protected override void Update(GameTime gameTime)
         {
-        
+
             var elapsedTimeInSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             _keyboardHandler.Update();
@@ -55,13 +57,14 @@ namespace Tetris
                 {
                     _level.IntegrateTile(_tile);
 
-                    GenerateNewTile();
-
                     if (IsGameOver())
                     {
                         Exit();
                         return;
                     }
+
+                    GenerateNewTile();
+
                 }
             }
             base.Update(gameTime);
@@ -73,20 +76,37 @@ namespace Tetris
             _spriteBatch.Begin();
             _scoreDisplay.Draw(_spriteBatch);
             _level.Draw(_spriteBatch);
-            _tile.Draw(_spriteBatch, _positionConverter);
+            _tile.Draw(_spriteBatch, _positionConverter, new Point(0, 0));
+
+            if (_nextTile != null)
+            {
+                var previewPosition = new Point(12, 2);
+                _nextTile.Draw(_spriteBatch, _positionConverter, new Point(12, 2));
+            }
 
             _spriteBatch.End();
         }
 
-        private void GenerateNewTile()
+        private Tile GenerateRandomTile()
         {
             TileType randomType = (TileType)_random.Next(Enum.GetValues(typeof(TileType)).Length);
-            _tile = new Tile(new Point(5, 0), randomType, GraphicsDevice);
+            return new Tile(new Point(5, 0), randomType, GraphicsDevice);
+        }
+
+        private void GenerateNewTile()
+        {
+            if (_nextTile == null)
+            {
+                _nextTile = GenerateRandomTile();
+            }
+
+            _tile = _nextTile;
+            _nextTile = GenerateRandomTile();
         }
 
         private bool IsGameOver()
         {
-            return _level.HasBlocksAboveField() || _level.IsOccupied(new Point(5, 0)); 
+            return _level.HasBlocksAboveField() || _level.IsOccupied(new Point(5, 0));
         }
 
         private void HandleInput()
@@ -108,17 +128,17 @@ namespace Tetris
 
             if (_keyboardHandler.IsPressedOnce(Keys.Up))
             {
-                _tile.Rotate(clockwise: true, _level);
+                _tile.Rotate(Rotation.Clockwise, _level);
             }
 
             if (_keyboardHandler.IsPressedOnce(Keys.Z))
             {
-                _tile.Rotate(clockwise: false, _level);
+                _tile.Rotate(Rotation.CounterClockwise, _level);
             }
 
             if (_keyboardHandler.IsPressedOnce(Keys.Space))
             {
-                while (_tile.CanMove(new Point(0, 1), _level)) 
+                while (_tile.CanMove(new Point(0, 1), _level))
                 {
                     _tile.Move(new Point(0, 1));
                 }

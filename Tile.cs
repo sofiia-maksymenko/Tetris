@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SharpDX.MediaFoundation;
 
 
 namespace Tetris
@@ -11,6 +12,12 @@ namespace Tetris
         L,
         J,
         T
+    }
+
+    public enum Rotation
+    {
+        Clockwise,
+        CounterClockwise
     }
 
     public class Tile
@@ -129,17 +136,22 @@ namespace Tetris
             return true;
         }
 
-        public void Draw(SpriteBatch spriteBatch, BlockPositionConverter positionConverter)
+        public void Draw(SpriteBatch spriteBatch, BlockPositionConverter positionConverter, Point offset)
         {
             foreach (var block in _blocks)
             {
-                block.Draw(spriteBatch, positionConverter);
+                var adjustedConverter = new BlockPositionConverter(
+                    Constants.ScreenWidth + offset.X * Constants.BlockSize,
+                    Constants.ScreenHeight + offset.Y * Constants.BlockSize
+                );
+
+                block.Draw(spriteBatch, adjustedConverter);
             }
         }
 
         public Block[] Blocks => _blocks;
 
-        public void Rotate(bool clockwise, Level level)
+        public void Rotate(Rotation direction, Level level)
         {
             if (_blocks.Length == 0) return;
 
@@ -158,7 +170,7 @@ namespace Tetris
 
                 int newX, newY;
 
-                if (clockwise)
+                if (direction == Rotation.Clockwise)
                 {
                     newX = -relativeY;
                     newY = relativeX;
