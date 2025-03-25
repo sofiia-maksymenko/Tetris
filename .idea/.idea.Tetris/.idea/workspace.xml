@@ -8,10 +8,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="78fb7990-3765-4a93-8052-eb525af1cdb3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Block.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Constants.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Tetris/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Tetris/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Game1.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Game1.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Tile.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,6 +22,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5ed9c0273baa4695ae7195410dd852e8d0e00/4d/3bfef42a/ContentManager.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -78,6 +80,7 @@
       <updated>1741348449334</updated>
       <workItem from="1741348452718" duration="1566000" />
       <workItem from="1741687710607" duration="2228000" />
+      <workItem from="1742913008814" duration="2207000" />
     </task>
     <servers />
   </component>

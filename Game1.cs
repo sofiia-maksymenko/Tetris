@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -14,7 +14,7 @@ namespace Tetris
         private readonly Random _random = Random.Shared;
         private KeyboardHandler _keyboardHandler;
         private MovementTimer _movementTimer;
-        private Tile _tile;
+        private Tile _currentTile;
         private Tile _nextTile;
         private Level _level;
 
@@ -35,7 +35,7 @@ namespace Tetris
             _scoreDisplay = new ScoreDisplay(Content.Load<SpriteFont>("Arial"), _level);
 
             _nextTile = GenerateRandomTile();
-            GenerateNewTile();
+            GenerateNextTile();
         }
 
         protected override void Update(GameTime gameTime)
@@ -49,21 +49,21 @@ namespace Tetris
 
             if (_movementTimer.Update(elapsedTimeInSeconds))
             {
-                if (_tile.CanMoveDown(_level))
+                if (_currentTile.CanMoveDown(_level))
                 {
-                    _tile.Move(new Point(0, 1));
+                    _currentTile.Move(new Point(0, 1));
                 }
                 else
                 {
-                    _level.IntegrateTile(_tile);
-
+                    _level.IntegrateTile(_currentTile);
+    
                     if (IsGameOver())
                     {
                         Exit();
                         return;
                     }
 
-                    GenerateNewTile();
+                    GenerateNextTile();
 
                 }
             }
@@ -76,13 +76,8 @@ namespace Tetris
             _spriteBatch.Begin();
             _scoreDisplay.Draw(_spriteBatch);
             _level.Draw(_spriteBatch);
-            _tile.Draw(_spriteBatch, _positionConverter, new Point(0, 0));
-
-            if (_nextTile != null)
-            {
-                var previewPosition = new Point(12, 2);
-                _nextTile.Draw(_spriteBatch, _positionConverter, new Point(12, 2));
-            }
+            _currentTile.Draw(_spriteBatch, _positionConverter);
+            _nextTile.Draw(_spriteBatch, _positionConverter);
 
             _spriteBatch.End();
         }
@@ -93,16 +88,14 @@ namespace Tetris
             return new Tile(new Point(5, 0), randomType, GraphicsDevice);
         }
 
-        private void GenerateNewTile()
+        private void GenerateNextTile()
         {
-            if (_nextTile == null)
-            {
-                _nextTile = GenerateRandomTile();
-            }
-
-            _tile = _nextTile;
+            _currentTile = _nextTile;
+            _currentTile.Position = new Point(Constants.FieldWidth / 2, 0);
+            
             _nextTile = GenerateRandomTile();
-        }
+            _nextTile.Position = new Point(12, 2);
+        } 
 
         private bool IsGameOver()
         {
@@ -111,36 +104,36 @@ namespace Tetris
 
         private void HandleInput()
         {
-            if (_keyboardHandler.IsPressedOnce(Keys.Left) && _tile.CanMove(new Point(-1, 0), _level))
+            if (_keyboardHandler.IsPressedOnce(Keys.Left) && _currentTile.CanMove(new Point(-1, 0), _level))
             {
-                _tile.Move(new Point(-1, 0));
+                _currentTile.Move(new Point(-1, 0));
             }
 
-            if (_keyboardHandler.IsPressedOnce(Keys.Right) && _tile.CanMove(new Point(1, 0), _level))
+            if (_keyboardHandler.IsPressedOnce(Keys.Right) && _currentTile.CanMove(new Point(1, 0), _level))
             {
-                _tile.Move(new Point(1, 0));
+                _currentTile.Move(new Point(1, 0));
             }
 
-            if (_keyboardHandler.IsPressedOnce(Keys.Down) && _tile.CanMove(new Point(0, 1), _level))
+            if (_keyboardHandler.IsPressedOnce(Keys.Down) && _currentTile.CanMove(new Point(0, 1), _level))
             {
-                _tile.Move(new Point(0, 1));
+                _currentTile.Move(new Point(0, 1));
             }
 
             if (_keyboardHandler.IsPressedOnce(Keys.Up))
             {
-                _tile.Rotate(Rotation.Clockwise, _level);
+                _currentTile.Rotate(Rotation.Clockwise, _level);
             }
 
             if (_keyboardHandler.IsPressedOnce(Keys.Z))
             {
-                _tile.Rotate(Rotation.CounterClockwise, _level);
+                _currentTile.Rotate(Rotation.CounterClockwise, _level);
             }
 
             if (_keyboardHandler.IsPressedOnce(Keys.Space))
             {
-                while (_tile.CanMove(new Point(0, 1), _level))
+                while (_currentTile.CanMove(new Point(0, 1), _level))
                 {
-                    _tile.Move(new Point(0, 1));
+                    _currentTile.Move(new Point(0, 1));
                 }
             }
         }

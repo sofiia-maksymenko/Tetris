@@ -23,9 +23,11 @@ namespace Tetris
     public class Tile
     {
         private readonly Block[] _blocks;
+        private Point _position;
 
         public Tile(Point startPosition, TileType tileType, GraphicsDevice graphicsDevice)
         {
+            _position = startPosition;
             switch (tileType)
             {
                 case TileType.O:
@@ -81,10 +83,27 @@ namespace Tetris
                 default:
                     _blocks = new Block[0];
                     break;
-
-
             }
         }
+
+        public Point Position
+        {
+            get => _position;
+            set
+            {
+                var oldPosition = _position;
+                var newPosition = value;
+
+                var difference = newPosition - oldPosition;
+                foreach (var block in _blocks)
+                {
+                    block.Position += difference;
+                }
+
+                _position = value;
+            }
+        }
+
 
         public void Move(Point offset)
         {
@@ -136,16 +155,11 @@ namespace Tetris
             return true;
         }
 
-        public void Draw(SpriteBatch spriteBatch, BlockPositionConverter positionConverter, Point offset)
+        public void Draw(SpriteBatch spriteBatch, BlockPositionConverter positionConverter)
         {
             foreach (var block in _blocks)
             {
-                var adjustedConverter = new BlockPositionConverter(
-                    Constants.ScreenWidth + offset.X * Constants.BlockSize,
-                    Constants.ScreenHeight + offset.Y * Constants.BlockSize
-                );
-
-                block.Draw(spriteBatch, adjustedConverter);
+                block.Draw(spriteBatch, positionConverter);
             }
         }
 
