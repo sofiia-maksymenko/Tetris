@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -60,11 +60,11 @@ namespace Tetris
                     if (IsGameOver())
                     {
                         Exit();
-                        return;
                     }
-
-                    GenerateNextTile();
-
+                    else
+                    {
+                        GenerateNextTile();    
+                    }
                 }
             }
             base.Update(gameTime);

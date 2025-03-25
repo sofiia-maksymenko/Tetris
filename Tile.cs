@@ -1,25 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SharpDX.MediaFoundation;
-
 
 namespace Tetris
 {
-    public enum TileType
-    {
-        O,
-        I,
-        L,
-        J,
-        T
-    }
-
-    public enum Rotation
-    {
-        Clockwise,
-        CounterClockwise
-    }
-
     public class Tile
     {
         private readonly Block[] _blocks;
@@ -81,8 +65,7 @@ namespace Tetris
                     break;
 
                 default:
-                    _blocks = new Block[0];
-                    break;
+                    throw new ArgumentOutOfRangeException(nameof(tileType), tileType, null);
             }
         }
 
@@ -184,15 +167,18 @@ namespace Tetris
 
                 int newX, newY;
 
-                if (direction == Rotation.Clockwise)
+                switch (direction)
                 {
-                    newX = -relativeY;
-                    newY = relativeX;
-                }
-                else
-                {
-                    newX = relativeY;
-                    newY = -relativeX;
+                    case Rotation.Clockwise:
+                        newX = -relativeY;
+                        newY = relativeX;
+                        break;
+                    case Rotation.CounterClockwise:
+                        newX = relativeY;
+                        newY = -relativeX;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
                 }
 
                 _blocks[i].Position = new Point(center.X + newX, center.Y + newY);

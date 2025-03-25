@@ -16,7 +16,7 @@ namespace Tetris
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(_font, "Punkte: " + _level.Score, new Vector2(10, 10), Color.White);
+            spriteBatch.DrawString(_font, $"Punkte: {_level.Score}", new Vector2(10, 10), Color.White);
         }
     }
 }
